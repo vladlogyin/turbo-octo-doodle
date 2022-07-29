@@ -1,0 +1,16 @@
+body{
+    background-color:#bdf;
+}
+div.api-entry{
+    background-color:#eee;
+    min-height: 10pt;
+    box-shadow: #00000010 0pt 0pt 5pt 5pt;
+    margin:15pt;
+    padding-left: 3pt;
+    padding-right: 3pt;
+    border-bottom-color:#ddd;
+    border-bottom-style: solid;
+    border-bottom-width: 1pt;
+    border-radius: 5pt;
+
+}

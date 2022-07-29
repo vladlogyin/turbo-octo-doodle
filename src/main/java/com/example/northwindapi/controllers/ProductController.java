@@ -22,8 +22,12 @@ public class ProductController {
         return repo.findAll();
     }
     @GetMapping("/product/by-id/{ProductID}")
-    public ProductEntity getProductById(@PathVariable int ProductID){
-        return repo.findById(ProductID).get();
+    public ResponseEntity<ProductEntity> getProductById(@PathVariable int ProductID){
+        if(repo.existsById(ProductID))
+        {
+            return ResponseEntity.status(HttpStatus.OK).body(repo.findById(ProductID).get());
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     @GetMapping("/products/by-cat/{CategoryID}")
@@ -54,16 +58,20 @@ public class ProductController {
         }
     }
 
-    @PutMapping() // UPDATE
+    @PutMapping("/product/update") // UPDATE
     public void updateProduct(@RequestBody ProductEntity product) {
         repo.save(product);
     }
 
     @DeleteMapping("/product/delete/{id}") // DELETE
-    @ResponseStatus(value= HttpStatus.NO_CONTENT)
-    public void deleteByProductId(@PathVariable int ProductID){
-        ProductEntity product = repo.findById(ProductID).get();
+    public ResponseEntity<String> deleteByProductId(@PathVariable int id){
+        if(!repo.existsById(id))
+        {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("");
+        }
+        ProductEntity product = repo.findById(id).get();
         repo.delete(product);
+        return ResponseEntity.status(HttpStatus.OK).body("");
     }
 
 }

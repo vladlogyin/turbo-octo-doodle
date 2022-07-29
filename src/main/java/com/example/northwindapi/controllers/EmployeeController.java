@@ -1,5 +1,6 @@
 package com.example.northwindapi.controllers;
 
+import com.example.northwindapi.entities.CategoryEntity;
 import com.example.northwindapi.entities.EmployeeEntity;
 import com.example.northwindapi.entities.ProductEntity;
 import com.example.northwindapi.repositories.EmployeeRepository;
@@ -22,13 +23,17 @@ public class EmployeeController {
         return repo.findAll();
     }
 
-    @GetMapping("/employee/by-id/{id}")
-    public EmployeeEntity getEmployee(@PathVariable int id) {
-        return repo.findById(id).orElseThrow(()->new HttpClientErrorException(HttpStatus.NOT_FOUND));
+    @GetMapping("/employee/by-id/{employeeID}")
+    public ResponseEntity<EmployeeEntity> getEmployeeByID(@PathVariable int employeeID){
+        if(repo.existsById(employeeID))
+        {
+            return ResponseEntity.status(HttpStatus.OK).body(repo.findById(employeeID).get());
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
     @GetMapping("/employees/by-title/{Title}")
     public List<EmployeeEntity> getEmployeesByTitle(@PathVariable String Title){
-        return repo.findByEmployeeTitle(Title);
+        return repo.findByTitle(Title);
     }
 
     //in review

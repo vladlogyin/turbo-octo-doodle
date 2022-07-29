@@ -22,15 +22,19 @@ public class CustomerController {
         return repo.findAll();
     }
 
-    @GetMapping("/customers/{id}")
-    public CustomerEntity getCustomer(@PathVariable String id) {
-        return repo.findById(id).orElseThrow(()->new HttpClientErrorException(HttpStatus.NOT_FOUND));
+    @GetMapping("/customer/by-id/{customerID}")
+    public ResponseEntity<CustomerEntity> getCustomer(@PathVariable String customerID) {
+        if(repo.existsById(customerID))
+        {
+            return ResponseEntity.status(HttpStatus.OK).body(repo.findById(customerID).get());
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
     @PostMapping("/customer")
     public ResponseEntity<String> newCustomer(@RequestBody CustomerEntity customer){
         if (repo.existsById(customer.getId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("User attempted to create a product which already exists");
+                    .body("Customer already exists");
         } else {
             repo.save(customer);
             return ResponseEntity.status(HttpStatus.CREATED).body("");
@@ -40,7 +44,7 @@ public class CustomerController {
     public void updateCustomer(CustomerEntity customer) {
         repo.save(customer);
     }
-    @DeleteMapping("/cuztomer/by-id/{customerID}")
+    @DeleteMapping("/customer/by-id/{customerID}")
     public ResponseEntity<String> deleteCustomer(@PathVariable String customerID) {
         if (repo.existsById(customerID)) {
             repo.deleteById(customerID);

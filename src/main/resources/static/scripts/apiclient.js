@@ -4,10 +4,10 @@ function showProductById(id)
 {
     var results = document.getElementById("results");
     var product;
-    var req = new Request("/product/by-id/"+id,"GET");
+    var req = new Request("/product/by-id/"+id,{method: "GET"});
 
     fetch(req)
-        .then((resp)=>response.json())
+        .then((resp)=>resp.json())
         .then((product)=>{
             var titleHeading = document.createElement("h1");
             titleHeading.innerText=product.productName;
